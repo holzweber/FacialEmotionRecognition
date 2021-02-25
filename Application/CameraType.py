@@ -7,8 +7,9 @@
 
 **Description**: Bachelorthesis - Prototype for FER
 
-In this File the Camera Prototype is running.
-Taking a trained CNN for calssifing emotion of a videocaptured picture (frame)
+In this File the Camera Mode Prototype is running.
+Taking a trained CNN for classification of emotion of a videocaptured picture (frame). Therefore it is possible
+to use the FER in a Realtime simulation.
 
 Main Feautres of the Displaying and FaceTracking are done Using the OpenCV Library, which can be looked up
 here: https://opencv.org/
@@ -21,9 +22,14 @@ from datetime import datetime
 
 class CameraType:
     """Camera Prototype Settings"""
-    def __init__(self):
-        self.cameratype = 0  # 0: internalwebcam, 1: externalwebcam
-        self.terminatekey = 'q'  # terminates the program
+    def __init__(self, cameratype):
+        if cameratype == "-internal":
+            print("Selected Internal Camera")
+            self.cameratype = 0  # 0: internalwebcam, 1: externalwebcam
+        else:
+            print("Selected External Camera")
+            self.cameratype = 1  # 0: internalwebcam, 1: externalwebcam
+        self.terminatekey = 3  # terminates the program with ctrl+c
         # taken from the opencv repository on Github:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
         self.cascadeclass = "./Resources/haarcascade_frontalface_default.xml"
@@ -53,7 +59,7 @@ class CameraType:
                 minSize=(32, 32),
             )
             )
-            ROI = None
+            ROI = None  # variable holding found face
             # Place a emotion-label and a Rectangle around the found faces
             # x: Start Coordinate x in horizontal direction
             # y: Start Coordinate y in vertical direction
@@ -86,6 +92,7 @@ class CameraType:
                 cv2.imwrite('./Screenshot/LatestCapture' + datetime.now().strftime("%m%d%Y,%H%M%S") + '.jpg', frame)
             if pressedKey == ord('f'):  # take a screenshot of current face
                 if ROI is not None:
+                    print("Took Screenshot of Detected Face in GrayScale Format")
                     cv2.imwrite('./Screenshot/LatestFace' + datetime.now().strftime("%m%d%Y,%H%M%S") + '.jpg', ROI)
             if pressedKey == ord(self.terminatekey):  # close FER
                 break  # breaks outer loop

@@ -1,3 +1,17 @@
+"""ExpressionRecognition.py
+
+# Facial Expression Recognition
+**Author**: Christopher Holzweber
+
+**Matr.-Nr.**: k11803108
+
+**Description**: Bachelorthesis - Prototype for FER
+
+In this  File ...
+TODO
+"""
+
+
 class ExpressionRecognition:
 
     def __init__(self):
@@ -7,3 +21,4 @@ class ExpressionRecognition:
     def getEmotion(self, faceImage):
         # return self.Classes[1]
         pass
+
