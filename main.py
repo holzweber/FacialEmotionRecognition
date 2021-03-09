@@ -24,8 +24,9 @@ externalcam = "-external"
 imagemode = "-img"
 
 
+
 def setDefault():
-    prototype = 1  # 0: run expression detection with camera, 1: choose a image to be detected
+    prototype = 0  # 0: run expression detection with camera, 1: choose a image to be detected
     cameratype = internalcam  # user can set, if internal or external camera should be used
     imagepath = ""
     return prototype, cameratype, imagepath

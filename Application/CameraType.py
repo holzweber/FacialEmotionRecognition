@@ -19,6 +19,8 @@ import numpy as np  # pip install numpy
 import cv2  # pip install opencv-python
 from datetime import datetime
 
+from CNN.ExpressionRecognition import ExpressionRecognition
+
 
 class CameraType:
     """Camera Prototype Settings"""
@@ -29,12 +31,13 @@ class CameraType:
         else:
             print("Selected External Camera")
             self.cameratype = 1  # 0: internalwebcam, 1: externalwebcam
-        self.terminatekey = 3  # terminates the program with ctrl+c
+        self.terminatekey = 'q'  # terminates the program with ctrl+c
         # taken from the opencv repository on Github:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
         self.cascadeclass = "./Resources/haarcascade_frontalface_default.xml"
 
     def runCamera(self):
+        fer = ExpressionRecognition() # create class for recognition
 
         facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
@@ -56,7 +59,7 @@ class CameraType:
                 gray,  # from grayscale image
                 scaleFactor=1.1,
                 minNeighbors=5,
-                minSize=(32, 32),
+                minSize=(100, 100),
             )
             )
             ROI = None  # variable holding found face
@@ -66,6 +69,7 @@ class CameraType:
             # w: End Coordinate w in horizontal direction (width)
             # h: End Coordinate h in vertical direction (height)
             for (x, y, w, h) in faces:
+                ROI = frame[y:y + h, x:x + w]  # store subimage/subface in ROI
                 # Draw a rectangle around the face
                 cv2.rectangle(frame,  # Desired Frame
                               (x, y),  # startpoint of frame
@@ -73,10 +77,10 @@ class CameraType:
                               (0, 255, 0),  # color of frame, set to green
                               2  # thickness of frame
                               )
-                ROI = gray[y:y + h, x:x + w]  # store subimage/subface in ROI
                 # Put Text (detected Emotion) to the found face
+                emotion = fer.getEmotion(ROI)
                 frame = cv2.putText(frame,
-                                    "Emotion",  # Message: Detected Emotion from trained Model
+                                    emotion,  # Message: Detected Emotion from trained Model
                                     (x, y),  # Label position - face found on (x,y)
                                     cv2.FONT_HERSHEY_SIMPLEX,  # Label Font
                                     1,  # Font Scaling Factor
