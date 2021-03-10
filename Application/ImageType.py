@@ -14,46 +14,105 @@ The picture has to be in the format of png,jpg or jpeg (watch out for ending of 
 Details on Usage:
 TODO
 
-Main Feautres of the Displaying and FaceTracking are done Using the OpenCV Library, which can be looked up
+Main Features of the Displaying and FaceTracking are done Using the OpenCV Library, which can be looked up
 here: https://opencv.org/
 """
 import tkinter
 import tkinter.filedialog
 import cv2
-from datetime import datetime
+from CNN.ExpressionRecognition import ExpressionRecognition
+
+def downscale(width, height):
+    """
+    Return the optimal percentage for downscaling
+    :param width: width of the original image
+    :param height: height of the original image
+    :return: percentage for downscaling, in comparison to orig. picutre
+    """
+    # sidewards image
+    if width > height:
+        return (400 / width) * 100
+    else:  # upwards image
+        return (400 / height) * 100
 
 
 class ImageType:
     """Image Prototype Settings"""
+
     def __init__(self):
-        self.terminatekey = 3  # terminates the program with ctrl+c
         # taken from the opencv repository on Github:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
-        self.cascadeclass = "./Resources/haarcascade_frontalface_default.xml"
+        self.cascadeclass = "./Resources/Haarcascade/haarcascade_frontalface_default.xml"
+        self.facecascade = None
 
-    def runImage(self, imagepath):
-        if imagepath == "":
-            root = tkinter.Tk()
-            path = tkinter.filedialog.askopenfilename()
-            root.destroy()
-        else:
-            path = imagepath
+    def updateCascadeClass(self, newcascadeclass):
+        """
+        TODO
+        :param newcascadeclass:
+        :return:
+        """
+        self.cascadeclass = "./Resources/Haarcascade/" + newcascadeclass
+        print(self.cascadeclass)
+        self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
-        if not (path.endswith('.jpeg') or path.endswith('.jpg')or path.endswith('.png')):
-            print("You did not select a Image with correct Format, only use jpeg,jpg or png!")
-            return
-        image = cv2.imread(path)
-        cv2.imshow("FaceImage", image)
-        while True:
+    def runImage(self, path, fer):
+        """
+        TODO
+        :param path:
+        :param fer:
+        :return:
+        """
+        fer = fer  # create class for recognition
 
-            # check which key was pressed
-            pressedKey = cv2.waitKey(1) & 0xFF
-            if pressedKey == ord('c'):  # take a screenshot of current frame
-                cv2.imwrite('./Screenshot/LatestCapture' + datetime.now().strftime("%m%d%Y,%H%M%S") + '.jpg', image)
-            if pressedKey == self.terminatekey:  # close FER
-                print("User Shutdown System")
-                break  # breaks outer loop
+        if self.facecascade is None:
+            self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
-            #  Release the Capture (Webcam)
-        #  Close all Windows
-        cv2.destroyAllWindows()
+        frame = cv2.imread(path)
+
+        # Downscaling of picture if too large, for better UserInterface Visualisation
+        if frame.shape[0] > 400 or frame.shape[1] > 400:
+            scale_percent = downscale(frame.shape[0], frame.shape[1])
+            width = int(frame.shape[1] * scale_percent / 100)
+            height = int(frame.shape[0] * scale_percent / 100)
+            dim = (width, height)
+
+            # resize image
+            frame = cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
+
+        # Creating a grayscale image out of the RGB webcam frame
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Detect all Faces in the grayscale frame
+        faces = (self.facecascade.detectMultiScale(
+            gray,  # from grayscale image
+            scaleFactor=1.8,
+            minNeighbors=5,
+            minSize=(22, 22),
+        )
+        )
+        ROI = None  # variable holding found face
+        # Place a emotion-label and a Rectangle around the found faces
+        # x: Start Coordinate x in horizontal direction
+        # y: Start Coordinate y in vertical direction
+        # w: End Coordinate w in horizontal direction (width)
+        # h: End Coordinate h in vertical direction (height)
+        for (x, y, w, h) in faces:
+            ROI = frame[y:y + h, x:x + w]  # store subimage/subface in ROI
+            # Draw a rectangle around the face
+            cv2.rectangle(frame,  # Desired Frame
+                          (x, y),  # startpoint of frame
+                          (x + w, y + h),  # endpoint of frame
+                          (0, 255, 0),  # color of frame, set to green
+                          2  # thickness of frame
+                          )
+            # Put Text (detected Emotion) to the found face
+            emotion = fer.getEmotion(ROI)
+            frame = cv2.putText(frame,
+                                emotion,  # Message: Detected Emotion from trained Model
+                                (x, y),  # Label position - face found on (x,y)
+                                cv2.FONT_HERSHEY_SIMPLEX,  # Label Font
+                                1,  # Font Scaling Factor
+                                (255, 0, 0),  # Color of LabelText - set to blue
+                                2,  # Thickness of Text in px
+                                cv2.LINE_AA)  # LineType used
+
+        return frame

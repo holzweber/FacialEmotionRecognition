@@ -13,6 +13,11 @@ In this main File ...
 from Application.CameraType import CameraType
 from Application.ImageType import ImageType
 import sys
+from Application.UserInterface import GUI
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 
 """Possible Argument Variables List"""
 # Camera Mode
@@ -22,7 +27,6 @@ externalcam = "-external"
 
 # Image Mode
 imagemode = "-img"
-
 
 
 def setDefault():
@@ -70,10 +74,14 @@ def checkCMDParameter():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    pro, cam, imgpath = checkCMDParameter()
-    if pro == 0:
-        camera = CameraType(cam)  # start webcam rendering
-        camera.runCamera()
-    else:
-        image = ImageType()
-        image.runImage(imgpath)
+    # pro, cam, imgpath = checkCMDParameter()
+
+    app = GUI()
+    app.run()
+
+    # if pro == 0:
+    #    camera = CameraType(cam)  # start webcam rendering
+    #    camera.runCamera()
+    # else:
+    #    image = ImageType()
+    #    image.runImage(imgpath)

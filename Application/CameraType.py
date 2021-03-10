@@ -24,30 +24,46 @@ from CNN.ExpressionRecognition import ExpressionRecognition
 
 class CameraType:
     """Camera Prototype Settings"""
-    def __init__(self, cameratype):
-        if cameratype == "-internal":
-            print("Selected Internal Camera")
-            self.cameratype = 0  # 0: internalwebcam, 1: externalwebcam
-        else:
-            print("Selected External Camera")
-            self.cameratype = 1  # 0: internalwebcam, 1: externalwebcam
+    def __init__(self):
+        self.terminate = False
+        self.cameraType = 0
         self.terminatekey = 'q'  # terminates the program with ctrl+c
         # taken from the opencv repository on Github:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
-        self.cascadeclass = "./Resources/haarcascade_frontalface_default.xml"
+        self.cascadeclass = "./Resources/Haarcascade/haarcascade_frontalface_default.xml"
+        self.facecascade = None
 
-    def runCamera(self):
-        fer = ExpressionRecognition() # create class for recognition
+    def updateCascadeClass(self, newcascadeclass):
+        self.cascadeclass = "./Resources/Haarcascade/" + newcascadeclass
+        print(self.cascadeclass)
+        self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
-        facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
+
+    def runCamera(self, cam):
+
+        if cam == "Internal":
+            print("Selected Internal Camera")
+            self.cameratype = 0  # 0: internalwebcam, 1: externalwebcam
+        elif cam == "External":
+            print("Selected External Camera")
+            self.cameratype = 1  # 0: internalwebcam, 1: externalwebcam
+        else:
+            print("ERROR: No camera selected")
+            return
+
+        fer = ExpressionRecognition()  # create class for recognition
+
+        self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
         cap = cv2.VideoCapture(self.cameratype, cv2.CAP_DSHOW)  # opens up the capture channel of the webcam
         # Create window
-        # cv2.namedWindow("Holzweber_11803108_FER")
-        # cv2.createButton("Back", back, None, cv2.QT_PUSH_BUTTON, 1)
         # kick off the GUI
+        windowtitle = "Holzweber_11803108_FER - press c to take screenshot and f to store face"
+        ret, frame = cap.read()
+        cv2.imshow(windowtitle, frame)
 
-        while True:
+        #while window is not closed
+        while cv2.getWindowProperty(windowtitle, cv2.WND_PROP_VISIBLE) > 0:
             # Capture frame-by-frame - reading in current frame
             ret, frame = cap.read()
 
@@ -55,9 +71,9 @@ class CameraType:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             # Detect all Faces in the grayscale frame
-            faces = (facecascade.detectMultiScale(
+            faces = (self.facecascade.detectMultiScale(
                 gray,  # from grayscale image
-                scaleFactor=1.1,
+                scaleFactor=1.4,
                 minNeighbors=5,
                 minSize=(100, 100),
             )
@@ -88,7 +104,7 @@ class CameraType:
                                     2,  # Thickness of Text in px
                                     cv2.LINE_AA)  # LineType used
 
-            cv2.imshow("Holzweber_11803108_FER", frame)
+            cv2.imshow(windowtitle, frame)
 
             # check which key was pressed
             pressedKey = cv2.waitKey(1) & 0xFF
