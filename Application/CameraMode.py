@@ -1,4 +1,4 @@
-"""CameraType.py
+"""CameraMode.py
 
 # Facial Expression Recognition
 **Author**: Christopher Holzweber
@@ -22,11 +22,11 @@ from datetime import datetime
 from CNN.ExpressionRecognition import ExpressionRecognition
 
 
-class CameraType:
+class CameraMode:
     """Camera Prototype Settings"""
     def __init__(self):
-        self.terminate = False
-        self.cameraType = 0
+
+        self.cameraType = 0  # 0: internal, 1:external
         self.terminatekey = 'q'  # terminates the program with ctrl+c
         # taken from the opencv repository on Github:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
@@ -56,6 +56,9 @@ class CameraType:
         self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
         cap = cv2.VideoCapture(self.cameratype, cv2.CAP_DSHOW)  # opens up the capture channel of the webcam
+        if cap is None or not cap.isOpened():
+            print("ERROR: Selected Camera is not available")
+            return
         # Create window
         # kick off the GUI
         windowtitle = "Holzweber_11803108_FER - press c to take screenshot and f to store face"

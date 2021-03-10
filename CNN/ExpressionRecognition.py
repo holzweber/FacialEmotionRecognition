@@ -19,7 +19,7 @@ class ExpressionRecognition:
 
     def __init__(self):
         # possible emotion classes
-        self.Classes = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+        self.emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
         # set default model
         self.modelkeras = "./Resources/Models/model2020_fer2013_p48_dim1.h5"
         # For ignoring tensorflow warnings
@@ -60,5 +60,4 @@ class ExpressionRecognition:
         temp.append(img)
         temp = np.array(temp)
         predictions = self.loaded_model.predict(temp)
-        return self.Classes[np.argmax(predictions)]
-        pass
+        return self.emotions[np.argmax(predictions)]

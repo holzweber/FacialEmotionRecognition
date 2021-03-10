@@ -1,4 +1,4 @@
-"""CameraType.py
+"""CameraMode.py
 
 # Facial Expression Recognition
 **Author**: Christopher Holzweber
@@ -36,7 +36,7 @@ def downscale(width, height):
         return (400 / height) * 100
 
 
-class ImageType:
+class ImageMode:
     """Image Prototype Settings"""
 
     def __init__(self):
@@ -62,7 +62,6 @@ class ImageType:
         :param fer:
         :return:
         """
-        fer = fer  # create class for recognition
 
         if self.facecascade is None:
             self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection

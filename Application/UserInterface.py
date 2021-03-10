@@ -2,8 +2,8 @@ import tkinter as tk
 import pygubu  # pip install pygubu, designer installed with pip install pygubu-designer
 import cv2
 
-from Application.CameraType import CameraType
-from Application.ImageType import ImageType
+from Application.CameraMode import CameraMode
+from Application.ImageMode import ImageMode
 from PIL import Image
 from PIL import ImageTk
 from datetime import datetime
@@ -27,8 +27,8 @@ def fillCombobox(combobox, path):
 class GUI:
 
     def __init__(self):
-        self.imageType = ImageType()
-        self.cameraType = CameraType()  # start webcam rendering
+        self.imageType = ImageMode()
+        self.cameraType = CameraMode()  # start webcam rendering
         self.expressionrec = ExpressionRecognition()
         # Create pygubu builder
         self.builder = builder = pygubu.Builder()
