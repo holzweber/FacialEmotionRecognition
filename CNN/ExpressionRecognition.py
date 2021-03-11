@@ -3,12 +3,25 @@
 # Facial Expression Recognition
 **Author**: Christopher Holzweber
 
-**Matr.-Nr.**: k11803108
-
 **Description**: Bachelorthesis - Prototype for FER
 
-In this  File ...
-TODO
+**Institution**: Johannes Kepler University Linz - Institute of Computational Perception
+
+This class uses a trained model (.h5 file) for FER. Given a current face image, detected by a haarcascade, The image
+will be first resized for fitting into the selected model and then the output prediction gets maximized and the emotion
+will be returned as a string. All models loaded should diver 7 main emotions:
+'angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise' - in that indexing order.
+
+Important: When using a new .h5 file be sure about the naming convention, since the preprocessing is using that naming
+information for selecting the channel size and also pixelsize!
+Meaning the filename has to include only once for example: modelx_p48_dim1.h5
+
+This class is only dealing with p100 or p48 and dim1 or dim3.
+In order to have other sizes, one have to change the method updateModel()
+
+**Required installations for running this class**:
+OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
+Tensorflow: pip install tensorflow      https://www.tensorflow.org/
 """
 import tensorflow as tf  # import tensorflow module
 import cv2  # library for image-handling
@@ -31,6 +44,13 @@ class ExpressionRecognition:
         self.inputdim = 1
 
     def updateModel(self, modelpath):
+        """
+        This method gets called, when a new model should be used for emotion detection.
+        Depending on the naming of the file, we can select the proper amount of input channels and pixelsizes.
+        This method is only dealing with p100 or p48 and dim1 or dim3.
+        :param modelpath: the name of the .h5 file to be selected.
+        :return: Nothing
+        """
         self.modelkeras = "./Resources/Models/" + modelpath
         self.loaded_model = tf.keras.models.load_model(self.modelkeras)
         # Now imageprocessor parameters have to be changed apparently
@@ -44,7 +64,12 @@ class ExpressionRecognition:
             self.inputdim = 3
 
     def imagepreprocessor(self, img):
-
+        """
+        The Imagepreprocessor is used for reshaping the input image and doing histogramm equal. if model dim. is of
+        channelsize 1.
+        :param img: original image to be predicted
+        :return: normalized picture, fitting for the chosen model
+        """
         if self.inputdim == 1:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.equalizeHist(img)
@@ -55,6 +80,11 @@ class ExpressionRecognition:
         return img
 
     def getEmotion(self, faceImage):
+        """
+        This method will return a emotion as a string for a given faceImage.
+        :param faceImage: image to be predicted
+        :return: emotion string with maximum confidence.
+        """
         temp = []  # reshape testdata, becuase predict function needs 4 dimensions
         img = self.imagepreprocessor(faceImage)
         temp.append(img)

@@ -3,16 +3,25 @@
 # Facial Expression Recognition
 **Author**: Christopher Holzweber
 
-**Matr.-Nr.**: k11803108
-
 **Description**: Bachelorthesis - Prototype for FER
 
-In this File the Camera Mode Prototype is running.
-Taking a trained CNN for classification of emotion of a videocaptured picture (frame). Therefore it is possible
-to use the FER in a Realtime simulation.
+**Institution**: Johannes Kepler University Linz - Institute of Computational Perception
 
-Main Feautres of the Displaying and FaceTracking are done Using the OpenCV Library, which can be looked up
-here: https://opencv.org/
+This file handles the general CameraMode. The user has already choosen an Camera Source in the Userinterface. If this
+selected source is available, the user then will see a new Window with the current camera capture. Each frame will run
+through a haarcascde, detecting all faces and see rectangles around each and everyone.
+The all faces will run through a trained model, using a given ExpressionRecogniiton instance for emotion detection.
+This label will then be placed to each and every detected face.
+
+The new opened Frame can be closed using 'q'.
+Using 'f' the current face will be stored in ./Screenshots/
+Using 'c' the current frame (with FER) will be stored in ./Screenshots/
+
+The default Haarcascade for facedetection is taken from the opencv repository on Github:
+https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
+
+**Required installations for running this class**:
+OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
 """
 
 import numpy as np  # pip install numpy
@@ -24,6 +33,7 @@ from CNN.ExpressionRecognition import ExpressionRecognition
 
 class CameraMode:
     """Camera Prototype Settings"""
+
     def __init__(self):
 
         self.cameraType = 0  # 0: internal, 1:external
@@ -34,12 +44,16 @@ class CameraMode:
         self.facecascade = None
 
     def updateCascadeClass(self, newcascadeclass):
+        """
+        If a new facedetector should be used, this method will be called with the wanted .xml file
+        :param newcascadeclass: File which will be used. Format has to be .xml
+        :return:
+        """
         self.cascadeclass = "./Resources/Haarcascade/" + newcascadeclass
         print(self.cascadeclass)
         self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
-
-    def runCamera(self, cam):
+    def runCamera(self, cam, fer):
 
         if cam == "Internal":
             print("Selected Internal Camera")
@@ -51,22 +65,22 @@ class CameraMode:
             print("ERROR: No camera selected")
             return
 
-        fer = ExpressionRecognition()  # create class for recognition
-
         self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
         cap = cv2.VideoCapture(self.cameratype, cv2.CAP_DSHOW)  # opens up the capture channel of the webcam
         if cap is None or not cap.isOpened():
             print("ERROR: Selected Camera is not available")
             return
+
+
         # Create window
         # kick off the GUI
         windowtitle = "Holzweber_11803108_FER - press c to take screenshot and f to store face"
         ret, frame = cap.read()
         cv2.imshow(windowtitle, frame)
 
-        #while window is not closed
-        while cv2.getWindowProperty(windowtitle, cv2.WND_PROP_VISIBLE) > 0:
+        # while window is not closed
+        while cv2.getWindowProperty(windowtitle, cv2.WND_PROP_VISIBLE) > 0:  # while window not closed
             # Capture frame-by-frame - reading in current frame
             ret, frame = cap.read()
 

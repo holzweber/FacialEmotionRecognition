@@ -3,12 +3,11 @@
 # Facial Expression Recognition
 **Author**: Christopher Holzweber
 
-**Matr.-Nr.**: k11803108
-
 **Description**: Bachelorthesis - Prototype for FER
 
-In this main File ...
+**Institution**: Johannes Kepler University Linz - Institute of Computational Perception
 
+This file handles starts the FER application by creating an instance of the GUI class and call the run() method.
 """
 
 # Press the green button in the gutter to run the script.
