@@ -22,7 +22,9 @@ https://jupyter.org/
 For creating a small userinterface I will also mention
 https://pypi.org/project/pygubu/ for creating a GUI using a desinger and
 https://docs.python.org/3/library/tkinter.html?highlight=tkinter#module-tkinter
-
+# Links to used Databases
+FER2013 Database: https://www.kaggle.com/msambare/fer2013
+FERG-DB: http://grail.cs.washington.edu/projects/deepexpr/ferg-2d-db.html
 # Open Topics
 I want to bring on more thoughts, how this prototype can be improved:
 Using not only image data, but also e.g. voice snippets from the microphone, one can predict emotions much better.
