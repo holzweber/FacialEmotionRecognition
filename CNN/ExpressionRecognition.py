@@ -12,13 +12,6 @@ will be first resized for fitting into the selected model and then the output pr
 will be returned as a string. All models loaded should diver 7 main emotions:
 'angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise' - in that indexing order.
 
-Important: When using a new .h5 file be sure about the naming convention, since the preprocessing is using that naming
-information for selecting the channel size and also pixelsize!
-Meaning the filename has to include only once for example: modelx_p48_dim1.h5
-
-This class is only dealing with p100 or p48 and dim1 or dim3.
-In order to have other sizes, one have to change the method updateModel()
-
 **Required installations for running this class**:
 OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
 Tensorflow: pip install tensorflow      https://www.tensorflow.org/
@@ -54,14 +47,8 @@ class ExpressionRecognition:
         self.modelkeras = "./Resources/Models/" + modelpath
         self.loaded_model = tf.keras.models.load_model(self.modelkeras)
         # Now imageprocessor parameters have to be changed apparently
-        if "p48" in modelpath:
-            self.imgsize = 48
-        elif "p100" in modelpath:
-            self.imgsize = 100
-        if "dim1" in modelpath:
-            self.inputdim = 1
-        elif "dim3" in modelpath:
-            self.inputdim = 3
+        self.inputdim = self.loaded_model.input_shape[3]
+        self.imgsize = self.loaded_model.input_shape[2]
 
     def imagepreprocessor(self, img):
         """
@@ -73,10 +60,15 @@ class ExpressionRecognition:
         if self.inputdim == 1:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.equalizeHist(img)
+
         img = cv2.resize(img, (self.imgsize, self.imgsize))
+
         if self.inputdim == 1:
             img = np.array(img).reshape(self.imgsize, self.imgsize, self.inputdim)
-        img = img / 255.0
+        try: # normaly you should not use try for control flow.
+            self.loaded_model.get_layer("tf.math.truediv")  # if model already implies division, dont do it manually
+        except:
+            img = img / 255.0
         return img
 
     def getEmotion(self, faceImage):

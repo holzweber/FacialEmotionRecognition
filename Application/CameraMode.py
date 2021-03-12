@@ -90,9 +90,9 @@ class CameraMode:
             # Detect all Faces in the grayscale frame
             faces = (self.facecascade.detectMultiScale(
                 gray,  # from grayscale image
-                scaleFactor=1.4,
+                scaleFactor=1.1,
                 minNeighbors=5,
-                minSize=(100, 100),
+                minSize=(48, 48),
             )
             )
             ROI = None  # variable holding found face

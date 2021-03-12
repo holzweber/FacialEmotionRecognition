@@ -2,3 +2,9 @@
 Screenshot/
 
 *.jpg
+
+CNN/__pycache__/
+
+ML/.ipynb_checkpoints/
+
+Application/__pycache__/

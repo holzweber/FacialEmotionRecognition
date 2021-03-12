@@ -44,7 +44,7 @@ class ImageMode:
         # https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
         self.cascadeclass = "./Resources/Haarcascade/haarcascade_frontalface_default.xml"
         self.facecascade = None
-        self.downscaleThreshold = 400
+        self.downscaleThreshold = 500
 
     def updateCascadeClass(self, newcascadeclass):
         """
@@ -85,9 +85,9 @@ class ImageMode:
         # Detect all Faces in the grayscale frame
         faces = (self.facecascade.detectMultiScale(
             gray,  # from grayscale image
-            scaleFactor=1.8,
+            scaleFactor=1.2,
             minNeighbors=5,
-            minSize=(22, 22),
+            minSize=(38, 38),
         )
         )
         ROI = None  # variable holding found face
