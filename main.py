@@ -10,10 +10,8 @@
 This file handles starts the FER application by creating an instance of the GUI class and call the run() method.
 """
 
-# Press the green button in the gutter to run the script.
 from Application.UserInterface import GUI
 
 if __name__ == '__main__':
-        app = GUI()
-        app.run()
-
+    app = GUI()
+    app.run()

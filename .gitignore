@@ -10,3 +10,5 @@ ML/.ipynb_checkpoints/
 Application/__pycache__/
 
 Resources/Models/model_vggface_transfer_fer2013_p224_dim3.h5
+
+Resources/Models/model_vggface_transfer_fer2013_p224_dim3.zip

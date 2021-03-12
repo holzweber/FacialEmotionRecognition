@@ -21,9 +21,9 @@ import tkinter.filedialog
 import tkinter.messagebox
 import tkinter as tk  # comes with python installer python.org
 import pygubu  # pip install pygubu, designer installed with pip install pygubu-designer
-# File and Imagehandling Imports
-import cv2  # OpenCV for part of the imagehandling
-from PIL import Image, ImageTk
+# File and Image - Handling Imports
+import cv2  # OpenCV for part of the Image Handling
+from PIL import Image, ImageTk  # pip install Pillow
 from datetime import datetime
 import os
 # FER Imports
@@ -56,35 +56,45 @@ class GUI:
         self.imageMode = ImageMode()
         self.cameraMode = CameraMode()  # start webcam rendering
         self.expressionrec = ExpressionRecognition()
+
         # Create pygubu builder
-        self.builder = builder = pygubu.Builder()
+
+        self.builder = pygubu.Builder()
 
         # Load .ui File
-        builder.add_from_file('./UserInterface/facialdetectionGUI.ui')
+        self.builder.add_from_file('./UserInterface/facialdetectionGUI.ui')
 
         # set the mainwindow to the toplevel object
-        self.mainwindow = builder.get_object('toplevel')
+        self.mainwindow = self.builder.get_object('toplevel')
         self.mainwindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
+
         # get imgLabel for displaying loaded images
-        self.imgLabel = builder.get_object('imgLabel')
+        self.imgLabel = self.builder.get_object('imgLabel')
         # latest image form imagemode
         self.imageInImageMode = None
 
-        self.cnnBar = builder.get_object('comboboxCNN')
-        self.haarBar = builder.get_object('comboboxHaar')
+        self.cnnBar = self.builder.get_object('comboboxCNN')
+        self.haarBar = self.builder.get_object('comboboxHaar')
+
         # Fill CNN Model Combobox
         fillCombobox(self.cnnBar, "./Resources/Models/")
         # Fill Haarcascade Combobox
         fillCombobox(self.haarBar, "./Resources/Haarcascade/")
         # Set Default Image for Imagemode
-        self.setImage("./Resources/Default/default_image.png")
+        image = cv2.imread("./Resources/Default/default_image.png")
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
+        image = Image.fromarray(image)  # creates image from array
+        image = ImageTk.PhotoImage(image)  # convert for tkinter
+        # Update the Imagepanel
+        self.imgLabel.configure(image=image)
+        self.imgLabel.image = image
 
         # Camera Mode Selection
-        self.boxCameraSelection = builder.get_object('comboboxCameraSelect')
+        self.boxCameraSelection = self.builder.get_object('comboboxCameraSelect')
         self.boxCameraSelection.current(0)  # set Default Camera to 'Internal'
 
         # Connect Callback Functions - ButtonClicks etc
-        builder.connect_callbacks(self)
+        self.builder.connect_callbacks(self)
 
     def closeWindow(self):
         """
@@ -93,6 +103,7 @@ class GUI:
         :return:
         """
         self.mainwindow.destroy()
+        self.mainwindow.quit()
 
     def on_load_cnn_model_button_click(self):
         """
@@ -121,10 +132,12 @@ class GUI:
         if classifier != "" and classifier.endswith('.xml'):
             self.imageMode.updateCascadeClass(classifier)
             self.cameraMode.updateCascadeClass(classifier)
-            tk.messagebox.showinfo(title="Update Haarcascade", message="Loaded new Haarcascade and adjusted parameters")
+            tk.messagebox.showinfo(title="Update Haarcascade",
+                                   message="Loaded new Haarcascade and adjusted parameters")
             print("SUCCESS: Loaded a new haarcascade for facedetection")
         else:
-            tk.messagebox.showerror(title="Haarcascade Error", message="No Haarcascade file selected, or wrong fileformat!")
+            tk.messagebox.showerror(title="Haarcascade Error",
+                                    message="No Haarcascade file selected, or wrong fileformat!")
             print("ERROR: No file selected when loading new haarcascade or wrong fileformat (has to be .xml)!")
 
     def on_start_camera_button_click(self):
@@ -165,7 +178,7 @@ class GUI:
         :return: Nothing
         """
 
-        path = tk.filedialog.askopenfilename()
+        path = tk.filedialog.askopenfilename()  # select image to be predicted
 
         if not (path.endswith('.jpeg') or path.endswith('.jpg') or path.endswith('.JPG') or path.endswith(
                 '.png') or path.endswith('.PNG')):
