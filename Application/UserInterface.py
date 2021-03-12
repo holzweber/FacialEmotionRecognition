@@ -18,6 +18,7 @@ OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
 """
 # User Interface Imports
 import tkinter.filedialog
+import tkinter.messagebox
 import tkinter as tk  # comes with python installer python.org
 import pygubu  # pip install pygubu, designer installed with pip install pygubu-designer
 # File and Imagehandling Imports
@@ -104,7 +105,9 @@ class GUI:
         if cnnModel != "" and cnnModel.endswith('.h5'):
             self.expressionrec.updateModel(cnnModel)
             print("SUCCESS: Loaded a new CNN Model and adjusted parameters")
+            tk.messagebox.showinfo(title="Update CNN Model", message="Loaded new CNN Model and adjusted parameters")
         else:
+            tk.messagebox.showerror(title="CNN Model Error", message="No CNN file selected, or wrong fileformat!")
             print("ERROR: No file selected when loading new haarcascade or wrong fileformat (has to be .h5)! ")
 
     def on_load_haar_model_button_click(self):
@@ -118,8 +121,10 @@ class GUI:
         if classifier != "" and classifier.endswith('.xml'):
             self.imageMode.updateCascadeClass(classifier)
             self.cameraMode.updateCascadeClass(classifier)
+            tk.messagebox.showinfo(title="Update Haarcascade", message="Loaded new Haarcascade and adjusted parameters")
             print("SUCCESS: Loaded a new haarcascade for facedetection")
         else:
+            tk.messagebox.showerror(title="Haarcascade Error", message="No Haarcascade file selected, or wrong fileformat!")
             print("ERROR: No file selected when loading new haarcascade or wrong fileformat (has to be .xml)!")
 
     def on_start_camera_button_click(self):
@@ -130,6 +135,10 @@ class GUI:
         """
         cameratype = self.boxCameraSelection.get()
         if cameratype != "":
+            tk.messagebox.showinfo(title="Start Camera", message="Press 'f' to store face.\n"
+                                                                 "Press 'c' to take screenshot.\n"
+                                                                 "Press 'q' to turn off camera.")
+
             print("SUCCESS: Start Camera - userinterface blocked until closing Camera Window")
             self.cameraMode.runCamera(cameratype, self.expressionrec)
         else:
@@ -145,6 +154,7 @@ class GUI:
         if self.imageInImageMode is not None:
             cv2.imwrite('./Screenshot/LatestFace' + datetime.now().strftime("%m%d%Y,%H%M%S") + '.jpg',
                         self.imageInImageMode)
+            tk.messagebox.showinfo(title="Save Image", message="Stored Image in ./LatestFace directory")
             print("SUCCESS: Saved image from ImageMode in the directory ./Screenshot/")
 
     def on_load_image_button_click(self):
@@ -159,7 +169,9 @@ class GUI:
 
         if not (path.endswith('.jpeg') or path.endswith('.jpg') or path.endswith('.JPG') or path.endswith(
                 '.png') or path.endswith('.PNG')):
-            print("You did not select a Image with correct Format, only use jpeg,jpg or png!")
+            tk.messagebox.showerror(title="Image Error",
+                                    message="You did not select a Image with correct Format!")
+            print("ERROR: You did not select a Image with correct Format, only use jpeg,jpg or png!")
             return
         # Selected a correct format
         self.setImage(path)

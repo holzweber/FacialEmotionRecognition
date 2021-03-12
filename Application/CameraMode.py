@@ -27,7 +27,8 @@ OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
 import numpy as np  # pip install numpy
 import cv2  # pip install opencv-python
 from datetime import datetime
-
+import tkinter as tk
+import tkinter.messagebox
 from CNN.ExpressionRecognition import ExpressionRecognition
 
 
@@ -69,6 +70,7 @@ class CameraMode:
 
         cap = cv2.VideoCapture(self.cameratype, cv2.CAP_DSHOW)  # opens up the capture channel of the webcam
         if cap is None or not cap.isOpened():
+            tk.messagebox.showerror(title="Camera Error", message="Camera not available!")
             print("ERROR: Selected Camera is not available")
             return
 
