@@ -12,6 +12,32 @@ FER is therefore a great task to solve, since this is a very important topic in 
 Since this is only a prototype, one should not expect to find trained models with 100 accuracy. Indeed the given models score much lower. Eventough overfitting and training with small datasets can be nerve taking, playing around with the provided userinterface in camera or imagemode, will make a lot of fun, since the prototype is performing very will, eventough statistic values are not over the top.
 
 Using good documentation you can use this prototype as basis for your own FER tool, by just train your own models and putting it to the according directories. 
+# Uploaded Models 
+In the directory Resources/Models you can find the best trained models. In the directory ML you can find the jupyter notebooks for training the models on your own.
+
+
+model_vggface_fer2013_p224_dim3:
+
+![model_vggface_fer2013_p224_dim3](https://user-images.githubusercontent.com/48522299/111029773-bebe3380-83fe-11eb-86a7-b4941eb3291c.png)
+
+
+model_vgg_fer2013_p48_dim1:
+
+![model_vgg_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029121-30947e00-83fb-11eb-8528-8695205eba73.png)
+
+model2020_FERG256_100px:
+![model2020_FERG256_100px](https://user-images.githubusercontent.com/48522299/111029553-88cc7f80-83fd-11eb-8546-ca5002f7038c.png)
+
+Attention: Even tough the FERG data performs optimal on its training data - for real human faces it performs pretty bad!
+
+Thats why the FERG256 model was used on the entire fer2013 dataset (seen as testing data with normalization):
+
+![model2020_FERG256_100px_ON_FER2013](https://user-images.githubusercontent.com/48522299/111029685-46f00900-83fe-11eb-9536-c475f00376f7.png)
+
+
+model2020_fer2013_p48_dim1:
+![model2020_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029136-4144f400-83fb-11eb-84f5-81c916e0cabe.png)
+
 
 # Links to used Frameworks 
 Since this is the first time I was dealing with a ML task and even a Python project, i would like to mention the frameworks and documentations, that helped me a lot putting all this together:
