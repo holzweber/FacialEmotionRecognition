@@ -22,6 +22,10 @@ https://keras.io/ - building up CNN architectures
 
 https://opencv.org/ - Mainly used for imageprocessing and facedetection using haarcascades.
 
+Important: Watch out which version is installed, since some versions of OpenCV will produce memory leaks (which results in non-terminating programms)
+As reported by me in the OpenCV forum, also this memory leak happens in the latest version v4.1.0.25
+https://forum.opencv.org/t/memory-leak-in-opencv-python-4-5-1-48/2139?u=chrisholzweber
+
 https://colab.research.google.com/ - For training CNN Models on small datasets in a small amount of times. 
 
 If you are not willing to use a cloud software for training your models, I also can mention:
