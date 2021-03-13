@@ -155,6 +155,7 @@ class GUI:
         """
         if self.latestCamStat is not None:
             emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+
             plt.bar(emotions,
                     self.latestCamStat,
                     align='center',
@@ -165,6 +166,7 @@ class GUI:
             plt.title("Latest Detected Emotions")
             storedir = "./Statistics/LatestFace" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
             plt.savefig(storedir, dpi=70)
+            plt.close() # close plt to avoid overlayers
             # Show image
             showImageInLabel(storedir, self.labelCamStatistik)
         else:
@@ -219,6 +221,7 @@ class GUI:
                                                                  "Press 'q' to turn off camera.")
 
             print("SUCCESS: Start Camera - userinterface blocked until closing Camera Window")
+            self.latestCamStat = None
             self.latestCamStat = self.cameraMode.runCamera(cameratype, self.expressionrec)
         else:
             print("ERROR: Camera already running or no camera selected")
