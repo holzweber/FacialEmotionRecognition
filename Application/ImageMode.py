@@ -19,9 +19,10 @@ OpenCV: pip install opencv-python       https://pypi.org/project/opencv-python/
 """
 
 import cv2  # OpenCV for imagehandling
+import numpy as np
 
 
-def downscale(width, height,threshold):
+def downscale(width, height, threshold):
     """
     Return the optimal percentage for downscaling
     :param width: width of the original image
@@ -63,7 +64,7 @@ class ImageMode:
         added
         :param path: Path of the oringinal image from a local directory with format jpeg,JPG,jpg,png or PNG
         :param fer: ExpressionRecognition instance to be used for detecting emotion
-        :return: FER Image
+        :return: FER Image without accuracy, FER Image with accuracy
         """
 
         if self.facecascade is None:
@@ -86,13 +87,12 @@ class ImageMode:
         # Detect all Faces in the grayscale frame
         faces = (self.facecascade.detectMultiScale(
             gray,  # from grayscale image
-            scaleFactor=1.2,
-            minNeighbors=5,
-            minSize=(38, 38),
+            scaleFactor=1.05,
+            minNeighbors=3,
+            minSize=(30, 30),
         )
         )
-
-        ROI = None  # variable holding found face
+        statframe = frame.copy()  # copy frame for statistical usage
         # Place a emotion-label and a Rectangle around the found faces
         # x: Start Coordinate x in horizontal direction
         # y: Start Coordinate y in vertical direction
@@ -107,8 +107,15 @@ class ImageMode:
                           (0, 255, 0),  # color of frame, set to green
                           2  # thickness of frame
                           )
+            cv2.rectangle(statframe,  # Desired Frame
+                          (x, y),  # startpoint of frame
+                          (x + w, y + h),  # endpoint of frame
+                          (0, 255, 0),  # color of frame, set to green
+                          2  # thickness of frame
+                          )
             # Put Text (detected Emotion) to the found face
             emotion, predictions = fer.getEmotion(rawface)
+            # Frame without accuracy
             frame = cv2.putText(frame,
                                 emotion,  # Message: Detected Emotion from trained Model
                                 (x, y),  # Label position - face found on (x,y)
@@ -118,4 +125,23 @@ class ImageMode:
                                 2,  # Thickness of Text in px
                                 cv2.LINE_AA)  # LineType used
 
-        return frame
+            # Frame with Accuracy
+            statframe = cv2.putText(statframe,
+                                    emotion,  # Message: Detected Emotion from trained Model
+                                    (x, y),  # Label position - face found on (x,y)
+                                    cv2.FONT_HERSHEY_SIMPLEX,  # Label Font
+                                    1,  # Font Scaling Factor
+                                    (255, 0, 0),  # Color of LabelText - set to blue
+                                    2,  # Thickness of Text in px
+                                    cv2.LINE_AA)  # LineType used
+            # Print accuracy
+            statframe = cv2.putText(statframe,
+                                    str(np.round(np.max(predictions) * 100, 1)),  # Add Accuracy
+                                    (x, y + h),  # Label position - face found on (x,y)
+                                    cv2.FONT_HERSHEY_SIMPLEX,  # Label Font
+                                    1,  # Font Scaling Factor
+                                    (255, 0, 0),  # Color of LabelText - set to blue
+                                    2,  # Thickness of Text in px
+                                    cv2.LINE_AA)  # LineType used
+
+        return frame, statframe

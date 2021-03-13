@@ -47,20 +47,21 @@ def fillCombobox(combobox, path):
             combobox['values'] = (*combobox['values'], file)
 
 
-def showImageInLabel(dir, label):
+def showImageInLabel(imgdir, label):
     """
     This method will show a given image from 'dir' in the given label 'label
-    :param dir: path to image
+    :param imgdir: path to image
     :param label: label to be used
     :return:
     """
-    image = cv2.imread(dir)
+    image = cv2.imread(imgdir)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
     image = Image.fromarray(image)  # creates image from array
     image = ImageTk.PhotoImage(image)  # convert for tkinter
     # Update the Imagepanel
     label.configure(image=image)
     label.image = image
+
 
 class GUI:
 
@@ -86,10 +87,10 @@ class GUI:
 
         # get imgLabel for displaying loaded images
         self.imgLabel = self.builder.get_object('imgLabel')
-        self.imgLabel.bind('<Double-Button-1>', self.on_click_close_img)
         # latest image form imagemode
         self.imageInImageMode = None
-        #showImageInLabel("./Resources/Default/default_image.png", self.imgLabel)
+        self.statimg = None  # holds image with accuracy for advanced image mode
+
         self.cnnBar = self.builder.get_object('comboboxCNN')
         self.haarBar = self.builder.get_object('comboboxHaar')
 
@@ -98,7 +99,6 @@ class GUI:
         # Fill Haarcascade Combobox
         fillCombobox(self.haarBar, "./Resources/Haarcascade/")
         # Set Default Image for Imagemode
-
 
         # Camera Mode Selection
         self.boxCameraSelection = self.builder.get_object('comboboxCameraSelect')
@@ -115,24 +115,35 @@ class GUI:
         """
         This method gets called, when the user closed the Userinterface.
         Here the mainwindow will be destroyed.
-        :return:
+        :return: Nothing
         """
         self.mainwindow.destroy()
         self.mainwindow.quit()
-
-    def on_click_close_img(self, event):
-        print("i am here")
-        self.imgLabel.configure(image=None)
-        self.imgLabel.image = None
 
     def on_press_image_science_mode(self):
         """
         This method will activate a prediction describtion for each encountered face in the loaded image
         :return:
         """
-        pass
+        if self.statimg is not None:
+            self.imageInImageMode = self.statimg
+            # for setting image on label, we have to convert into a fitting format
+            self.imageInImageMode = cv2.cvtColor(self.imageInImageMode, cv2.COLOR_BGR2RGB)  # from bgr to rgb
+            self.imageInImageMode = Image.fromarray(self.imageInImageMode)  # creates image from array
+            self.imageInImageMode = ImageTk.PhotoImage(self.imageInImageMode)  # convert for tkinter
+            # update the panel
+            self.imgLabel.configure(image=self.imageInImageMode)
+            self.imgLabel.image = self.imageInImageMode
+        else:
+            tk.messagebox.showerror(title="Show Accuracy Error",
+                                    message="No image loaded!")
 
     def on_click_close_stat(self, event):
+        """
+        This method gets called, when double clicking on the displayed statistic, in order to close it again
+        :param event: Not used, but needed as parameter
+        :return: Nothing
+        """
         self.labelCamStatistik.configure(image=None)
         self.labelCamStatistik.image = None
 
@@ -140,25 +151,32 @@ class GUI:
         """
         This method show the latest statistics of the camera mode and also save the diagram in the
         Statistics Folder
-        :return:
+        :return: Nothing
         """
         if self.latestCamStat is not None:
             emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
-            plt.bar(emotions, self.latestCamStat, align='center', alpha=0.5)
+            plt.bar(emotions,
+                    self.latestCamStat,
+                    align='center',
+                    alpha=0.5,
+                    color=['red', 'green', 'cyan', 'magenta', 'blue', 'yellow'])
             plt.xlabel("Emotion")
             plt.ylabel("Rel. Freq [%]")
             plt.title("Latest Detected Emotions")
-            dir = "./Statistics/LatestFace" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
-            plt.savefig(dir, dpi=70)
+            storedir = "./Statistics/LatestFace" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
+            plt.savefig(storedir, dpi=70)
             # Show image
-            showImageInLabel(dir, self.labelCamStatistik)
+            showImageInLabel(storedir, self.labelCamStatistik)
+        else:
+            tk.messagebox.showerror(title="Camera Statistic Error",
+                                    message="You did not run the camera!")
 
     def on_load_cnn_model_button_click(self):
         """
         This method will get called, when the user has chosen a new CNN Model for FER and then pressed
         the "Load" button. After that, the updateModel(model) method of the ExpressionRecognition object
         will get called, where the CNN Model will be updated, for the next FER
-        :return:
+        :return: Nothing
         """
         cnnModel = self.cnnBar.get()
         if cnnModel != "" and cnnModel.endswith('.h5'):
@@ -174,7 +192,7 @@ class GUI:
         This method will get called, when the user has chosen a new Haarcascade for Face Detection and then pressed
         the "Load" button. After that, the updateCascadeClass(classifier) method of both, the ImageMode and the
         CameraMode object will get called, where the Face Detector will be updated, for the next FER.
-        :return:
+        :return: Nothing
         """
         classifier = self.haarBar.get()
         if classifier != "" and classifier.endswith('.xml'):
@@ -182,7 +200,7 @@ class GUI:
             self.cameraMode.updateCascadeClass(classifier)
             tk.messagebox.showinfo(title="Update Haarcascade",
                                    message="Loaded new Haarcascade and adjusted parameters")
-            print("SUCCESS: Loaded a new haarcascade for facedetection")
+            print("SUCCESS: Loaded a new Haarcascade for facedetection")
         else:
             tk.messagebox.showerror(title="Haarcascade Error",
                                     message="No Haarcascade file selected, or wrong fileformat!")
@@ -192,7 +210,7 @@ class GUI:
         """
         This method starts the selected camera in a new Window. Until closing the cameraWindow, the Userinterface
         will be blocked.
-        :return:
+        :return: Nothing
         """
         cameratype = self.boxCameraSelection.get()
         if cameratype != "":
@@ -220,9 +238,9 @@ class GUI:
 
     def on_load_image_button_click(self):
         """
-        When loading a picture, a filedialog will be openend, where you can select a proper image form a local directory.
+        When loading a picture, a filedialog will be pop up for selecting a picture from the local directory.
         Allowed formats are: .jpeg,.JPG,.jpg,.png,.PNG
-        Facial Emotions on the picutres will be automatically recognized and then loaded in the Userinterface
+        Facial Emotions on the pictures will be automatically recognized and then loaded in the userinterface
         :return: Nothing
         """
 
@@ -244,7 +262,7 @@ class GUI:
         :param path: path of the choosen picture from a local directory.
         :return: Nothing
         """
-        image = self.imageMode.runImage(path, self.expressionrec)
+        image, self.statimg = self.imageMode.runImage(path, self.expressionrec)
 
         if image is not None:
             self.imageInImageMode = image
@@ -255,9 +273,6 @@ class GUI:
             # update the panel
             self.imgLabel.configure(image=self.imageInImageMode)
             self.imgLabel.image = self.imageInImageMode
-
-    def myfunction(self,event):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"), width=600, height=300)
 
     def run(self):
         """

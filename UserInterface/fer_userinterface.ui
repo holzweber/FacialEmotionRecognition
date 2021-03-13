@@ -50,7 +50,7 @@
                     <property name="command" type="command" cbtype="simple">on_press_image_science_mode</property>
                     <property name="cursor">arrow</property>
                     <property name="default">normal</property>
-                    <property name="text" translatable="yes">Scientific Mode</property>
+                    <property name="text" translatable="yes">Show Accuracy</property>
                     <layout manager="place">
                       <property name="anchor">nw</property>
                       <property name="x">0</property>
