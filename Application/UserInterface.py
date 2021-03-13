@@ -30,6 +30,7 @@ import os
 from Application.CameraMode import CameraMode
 from Application.ImageMode import ImageMode
 from CNN.ExpressionRecognition import ExpressionRecognition
+import matplotlib.pyplot as plt
 
 
 def fillCombobox(combobox, path):
@@ -45,6 +46,21 @@ def fillCombobox(combobox, path):
         if file not in combobox['values']:
             combobox['values'] = (*combobox['values'], file)
 
+
+def showImageInLabel(dir, label):
+    """
+    This method will show a given image from 'dir' in the given label 'label
+    :param dir: path to image
+    :param label: label to be used
+    :return:
+    """
+    image = cv2.imread(dir)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
+    image = Image.fromarray(image)  # creates image from array
+    image = ImageTk.PhotoImage(image)  # convert for tkinter
+    # Update the Imagepanel
+    label.configure(image=image)
+    label.image = image
 
 class GUI:
 
@@ -62,7 +78,7 @@ class GUI:
         self.builder = pygubu.Builder()
 
         # Load .ui File
-        self.builder.add_from_file('./UserInterface/facialdetectionGUI.ui')
+        self.builder.add_from_file('./UserInterface/fer_userinterface.ui')
 
         # set the mainwindow to the toplevel object
         self.mainwindow = self.builder.get_object('toplevel')
@@ -70,9 +86,10 @@ class GUI:
 
         # get imgLabel for displaying loaded images
         self.imgLabel = self.builder.get_object('imgLabel')
+        self.imgLabel.bind('<Double-Button-1>', self.on_click_close_img)
         # latest image form imagemode
         self.imageInImageMode = None
-
+        #showImageInLabel("./Resources/Default/default_image.png", self.imgLabel)
         self.cnnBar = self.builder.get_object('comboboxCNN')
         self.haarBar = self.builder.get_object('comboboxHaar')
 
@@ -81,18 +98,16 @@ class GUI:
         # Fill Haarcascade Combobox
         fillCombobox(self.haarBar, "./Resources/Haarcascade/")
         # Set Default Image for Imagemode
-        image = cv2.imread("./Resources/Default/default_image.png")
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
-        image = Image.fromarray(image)  # creates image from array
-        image = ImageTk.PhotoImage(image)  # convert for tkinter
-        # Update the Imagepanel
-        self.imgLabel.configure(image=image)
-        self.imgLabel.image = image
+
 
         # Camera Mode Selection
         self.boxCameraSelection = self.builder.get_object('comboboxCameraSelect')
         self.boxCameraSelection.current(0)  # set Default Camera to 'Internal'
 
+        # Camera Statistik Vector
+        self.latestCamStat = None
+        self.labelCamStatistik = self.builder.get_object('labelCamStatistik')
+        self.labelCamStatistik.bind('<Double-Button-1>', self.on_click_close_stat)
         # Connect Callback Functions - ButtonClicks etc
         self.builder.connect_callbacks(self)
 
@@ -104,6 +119,39 @@ class GUI:
         """
         self.mainwindow.destroy()
         self.mainwindow.quit()
+
+    def on_click_close_img(self, event):
+        print("i am here")
+        self.imgLabel.configure(image=None)
+        self.imgLabel.image = None
+
+    def on_press_image_science_mode(self):
+        """
+        This method will activate a prediction describtion for each encountered face in the loaded image
+        :return:
+        """
+        pass
+
+    def on_click_close_stat(self, event):
+        self.labelCamStatistik.configure(image=None)
+        self.labelCamStatistik.image = None
+
+    def on_click_show_camera_statistics(self):
+        """
+        This method show the latest statistics of the camera mode and also save the diagram in the
+        Statistics Folder
+        :return:
+        """
+        if self.latestCamStat is not None:
+            emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+            plt.bar(emotions, self.latestCamStat, align='center', alpha=0.5)
+            plt.xlabel("Emotion")
+            plt.ylabel("Rel. Freq [%]")
+            plt.title("Latest Detected Emotions")
+            dir = "./Statistics/LatestFace" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
+            plt.savefig(dir, dpi=70)
+            # Show image
+            showImageInLabel(dir, self.labelCamStatistik)
 
     def on_load_cnn_model_button_click(self):
         """
@@ -153,7 +201,7 @@ class GUI:
                                                                  "Press 'q' to turn off camera.")
 
             print("SUCCESS: Start Camera - userinterface blocked until closing Camera Window")
-            self.cameraMode.runCamera(cameratype, self.expressionrec)
+            self.latestCamStat = self.cameraMode.runCamera(cameratype, self.expressionrec)
         else:
             print("ERROR: Camera already running or no camera selected")
 
@@ -187,6 +235,7 @@ class GUI:
             print("ERROR: You did not select a Image with correct Format, only use jpeg,jpg or png!")
             return
         # Selected a correct format
+
         self.setImage(path)
 
     def setImage(self, path):
@@ -196,15 +245,19 @@ class GUI:
         :return: Nothing
         """
         image = self.imageMode.runImage(path, self.expressionrec)
+
         if image is not None:
             self.imageInImageMode = image
             # for setting image on label, we have to convert into a fitting format
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
-            image = Image.fromarray(image)  # creates image from array
-            image = ImageTk.PhotoImage(image)  # convert for tkinter
+            self.imageInImageMode = cv2.cvtColor(self.imageInImageMode, cv2.COLOR_BGR2RGB)  # from bgr to rgb
+            self.imageInImageMode = Image.fromarray(self.imageInImageMode)  # creates image from array
+            self.imageInImageMode = ImageTk.PhotoImage(self.imageInImageMode)  # convert for tkinter
             # update the panel
-            self.imgLabel.configure(image=image)
-            self.imgLabel.image = image
+            self.imgLabel.configure(image=self.imageInImageMode)
+            self.imgLabel.image = self.imageInImageMode
+
+    def myfunction(self,event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"), width=600, height=300)
 
     def run(self):
         """

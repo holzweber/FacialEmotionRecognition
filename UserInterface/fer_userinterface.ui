@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.1">
+  <object class="tk.Toplevel" id="toplevel">
+    <property name="geometry">600x305</property>
+    <property name="height">300</property>
+    <property name="resizable">both</property>
+    <property name="title" translatable="yes">Facial Emotion Recognition</property>
+    <property name="width">400</property>
+    <child>
+      <object class="ttk.Frame" id="mainframe">
+        <property name="borderwidth">4</property>
+        <property name="height">300</property>
+        <property name="width">300</property>
+        <layout manager="grid">
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nsew</property>
+        </layout>
+        <child>
+          <object class="pygubu.builder.widgets.scrolledframe" id="scrolledframe1">
+            <property name="height">300</property>
+            <property name="relief">flat</property>
+            <property name="scrolltype">vertical</property>
+            <property name="usemousewheel">true</property>
+            <property name="width">400</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <property type="col" id="0" name="weight">1</property>
+              <property type="row" id="0" name="weight">1</property>
+            </layout>
+            <child>
+              <object class="ttk.Labelframe" id="labelframeImage">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Image Mode</property>
+                <property name="width">600</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                  <property name="sticky">nsew</property>
+                  <property type="col" id="0" name="weight">1</property>
+                  <property type="row" id="0" name="weight">0</property>
+                </layout>
+                <child>
+                  <object class="ttk.Button" id="buttonImgScience">
+                    <property name="command" type="command" cbtype="simple">on_press_image_science_mode</property>
+                    <property name="cursor">arrow</property>
+                    <property name="default">normal</property>
+                    <property name="text" translatable="yes">Scientific Mode</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Button" id="imageButton">
+                    <property name="command" type="command" cbtype="simple">on_load_image_button_click</property>
+                    <property name="text" translatable="yes">Load Image</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Button" id="saveButton">
+                    <property name="command" type="command" cbtype="simple">on_save_image_from_ImageMode_button_click</property>
+                    <property name="state">normal</property>
+                    <property name="text" translatable="yes">Save</property>
+                    <layout manager="place">
+                      <property name="anchor">ne</property>
+                      <property name="relx">1.0</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="imgpath_label">
+                    <property name="text" translatable="yes">Selected Image</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="imgLabel">
+                    <property name="cursor">arrow</property>
+                    <property name="font">TkTextFont</property>
+                    <property name="style">Toolbutton</property>
+                    <property name="takefocus">true</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Labelframe" id="labelframeCamera">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Camera Mode</property>
+                <property name="width">200</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">6</property>
+                  <property name="sticky">nsew</property>
+                  <property type="col" id="0" name="weight">1</property>
+                </layout>
+                <child>
+                  <object class="ttk.Button" id="buttonCameraStart">
+                    <property name="command" type="command" cbtype="simple">on_start_camera_button_click</property>
+                    <property name="default">normal</property>
+                    <property name="text" translatable="yes">Start Camera</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="labelCameraType">
+                    <property name="text" translatable="yes">Select Camera</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Combobox" id="comboboxCameraSelect">
+                    <property name="state">readonly</property>
+                    <property name="values">Internal External</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Button" id="buttonShowCameraStat">
+                    <property name="command" type="command" cbtype="simple">on_click_show_camera_statistics</property>
+                    <property name="default">normal</property>
+                    <property name="text" translatable="yes">Save and show statistic</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="labelCamStatistik">
+                    <property name="anchor">e</property>
+                    <layout manager="pack">
+                      <property name="expand">true</property>
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Labelframe" id="labelframeCNN">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">CNN Model</property>
+                <property name="width">200</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">12</property>
+                  <property type="col" id="0" name="weight">1</property>
+                </layout>
+                <child>
+                  <object class="ttk.Combobox" id="comboboxCNN">
+                    <property name="exportselection">true</property>
+                    <property name="state">readonly</property>
+                    <property name="width">75</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Button" id="buttonCNNModel">
+                    <property name="command" type="command" cbtype="simple">on_load_cnn_model_button_click</property>
+                    <property name="text" translatable="yes">Load</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Labelframe" id="labelframeFaceDetector">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Face Detector</property>
+                <property name="width">200</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">15</property>
+                  <property type="col" id="0" name="weight">1</property>
+                </layout>
+                <child>
+                  <object class="ttk.Combobox" id="comboboxHaar">
+                    <property name="exportselection">true</property>
+                    <property name="state">readonly</property>
+                    <property name="width">75</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Button" id="buttonFaceDetector">
+                    <property name="command" type="command" cbtype="simple">on_load_haar_model_button_click</property>
+                    <property name="text" translatable="yes">Load</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="copyrightLabel">
+            <property name="text" translatable="yes">© Christopher Holzweber - Johannes Kepler University Linz / Institute of Computational Perception</property>
+            <layout manager="grid" />
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

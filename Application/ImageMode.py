@@ -82,6 +82,7 @@ class ImageMode:
 
         # Creating a grayscale image out of the RGB webcam frame
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
         # Detect all Faces in the grayscale frame
         faces = (self.facecascade.detectMultiScale(
             gray,  # from grayscale image
@@ -90,6 +91,7 @@ class ImageMode:
             minSize=(38, 38),
         )
         )
+
         ROI = None  # variable holding found face
         # Place a emotion-label and a Rectangle around the found faces
         # x: Start Coordinate x in horizontal direction
@@ -106,7 +108,7 @@ class ImageMode:
                           2  # thickness of frame
                           )
             # Put Text (detected Emotion) to the found face
-            emotion = fer.getEmotion(rawface)
+            emotion, predictions = fer.getEmotion(rawface)
             frame = cv2.putText(frame,
                                 emotion,  # Message: Detected Emotion from trained Model
                                 (x, y),  # Label position - face found on (x,y)

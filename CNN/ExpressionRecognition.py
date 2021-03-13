@@ -75,11 +75,11 @@ class ExpressionRecognition:
         """
         This method will return a emotion as a string for a given faceImage.
         :param faceImage: image to be predicted
-        :return: emotion string with maximum confidence.
+        :return: emotion string with maximum confidence and the vektor of all prediction values
         """
         temp = []  # reshape testdata, becuase predict function needs 4 dimensions
         img = self.imagepreprocessor(faceImage)
         temp.append(img)
         temp = np.array(temp)
         predictions = self.loaded_model.predict(temp)
-        return self.emotions[np.argmax(predictions)]
+        return self.emotions[np.argmax(predictions)], predictions

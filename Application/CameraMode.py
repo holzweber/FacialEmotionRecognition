@@ -55,7 +55,14 @@ class CameraMode:
         self.facecascade = cv2.CascadeClassifier(self.cascadeclass)  # for face recognition/detection
 
     def runCamera(self, cam, fer):
+        """
+        This method starts the camera and a new window, where the user will see him/herself with the accorindg emotion
+        Also multiface detection is possible.
 
+        :param cam: camera to be used as string "Internal" or "External"
+        :param fer: FER instance to be used
+        :return:  statistic vector in % for imaging
+        """
         if cam == "Internal":
             print("Selected Internal Camera")
             self.cameratype = 0  # 0: internalwebcam, 1: externalwebcam
@@ -74,6 +81,7 @@ class CameraMode:
             print("ERROR: Selected Camera is not available")
             return
 
+        emotionCounter = [0, 0, 0, 0, 0, 0, 0]
 
         # Create window
         # kick off the GUI
@@ -113,7 +121,7 @@ class CameraMode:
                               2  # thickness of frame
                               )
                 # Put Text (detected Emotion) to the found face
-                emotion = fer.getEmotion(ROI)
+                emotion, predictions = fer.getEmotion(ROI)
                 frame = cv2.putText(frame,
                                     emotion,  # Message: Detected Emotion from trained Model
                                     (x, y),  # Label position - face found on (x,y)
@@ -122,7 +130,7 @@ class CameraMode:
                                     (255, 0, 0),  # Color of LabelText - set to blue
                                     2,  # Thickness of Text in px
                                     cv2.LINE_AA)  # LineType used
-
+                emotionCounter[np.argmax(predictions)] += 1
             cv2.imshow(windowtitle, frame)
 
             # check which key was pressed
@@ -140,3 +148,4 @@ class CameraMode:
         cap.release()
         #  Close all Windows
         cv2.destroyAllWindows()
+        return (emotionCounter / np.sum(emotionCounter)) * 100  # return statistic vektor in percent
