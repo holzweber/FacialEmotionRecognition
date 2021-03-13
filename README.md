@@ -26,6 +26,7 @@ model_vgg_fer2013_p48_dim1:
 ![model_vgg_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029121-30947e00-83fb-11eb-8528-8695205eba73.png)
 
 model2020_FERG256_100px:
+
 ![model2020_FERG256_100px](https://user-images.githubusercontent.com/48522299/111029553-88cc7f80-83fd-11eb-8546-ca5002f7038c.png)
 
 Attention: Even tough the FERG data performs optimal on its training data - for real human faces it performs pretty bad!
@@ -36,6 +37,7 @@ Thats why the FERG256 model was used on the entire fer2013 dataset (seen as test
 
 
 model2020_fer2013_p48_dim1:
+
 ![model2020_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029136-4144f400-83fb-11eb-84f5-81c916e0cabe.png)
 
 
