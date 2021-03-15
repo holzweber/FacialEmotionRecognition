@@ -234,7 +234,7 @@ class GUI:
         :return: Nothing
         """
         if self.imageInImageMode is not None:
-            cv2.imwrite('./Screenshot/LatestFace' + datetime.now().strftime("%m%d%Y,%H%M%S") + '.jpg',
+            cv2.imwrite('./Screenshot/LatestFace' + datetime.now().strftime("%m%d%Y,%H%M") + '.jpg',
                         self.imageInImageMode)
             tk.messagebox.showinfo(title="Save Image", message="Stored Image in ./LatestFace directory")
             print("SUCCESS: Saved image from ImageMode in the directory ./Screenshot/")
@@ -270,12 +270,12 @@ class GUI:
         if image is not None:
             self.imageInImageMode = image
             # for setting image on label, we have to convert into a fitting format
-            self.imageInImageMode = cv2.cvtColor(self.imageInImageMode, cv2.COLOR_BGR2RGB)  # from bgr to rgb
-            self.imageInImageMode = Image.fromarray(self.imageInImageMode)  # creates image from array
-            self.imageInImageMode = ImageTk.PhotoImage(self.imageInImageMode)  # convert for tkinter
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # from bgr to rgb
+            image = Image.fromarray(image)  # creates image from array
+            image = ImageTk.PhotoImage(image)  # convert for tkinter
             # update the panel
-            self.imgLabel.configure(image=self.imageInImageMode)
-            self.imgLabel.image = self.imageInImageMode
+            self.imgLabel.configure(image=image)
+            self.imgLabel.image = image
 
     def run(self):
         """
