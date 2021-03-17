@@ -186,8 +186,8 @@ class GUI:
             print("SUCCESS: Loaded a new CNN Model and adjusted parameters")
             tk.messagebox.showinfo(title="Update CNN Model", message="Loaded new CNN Model and adjusted parameters")
         else:
-            tk.messagebox.showerror(title="CNN Model Error", message="No CNN file selected, or wrong fileformat!")
-            print("ERROR: No file selected when loading new haarcascade or wrong fileformat (has to be .h5)! ")
+            tk.messagebox.showerror(title="CNN Model Error", message="No CNN file selected, or wrong file format!")
+            print("ERROR: No file selected when loading new haarcascade or wrong file format (has to be .h5)! ")
 
     def on_load_haar_model_button_click(self):
         """
@@ -205,8 +205,8 @@ class GUI:
             print("SUCCESS: Loaded a new Haarcascade for facedetection")
         else:
             tk.messagebox.showerror(title="Haarcascade Error",
-                                    message="No Haarcascade file selected, or wrong fileformat!")
-            print("ERROR: No file selected when loading new haarcascade or wrong fileformat (has to be .xml)!")
+                                    message="No Haarcascade file selected, or wrong file format!")
+            print("ERROR: No file selected when loading new haarcascade or wrong file format (has to be .xml)!")
 
     def on_start_camera_button_click(self):
         """
