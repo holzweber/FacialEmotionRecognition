@@ -80,22 +80,72 @@ Using bigger databases, one can train more satisfying models.
 There exist more strategies on datapreprocessing like, attentionbased CNNs or Transferlearning, hybrid models using CNN and RNNs.
 
 # Required Installations for using my protoype
-I will list the installations, using the python installer (using Google Collab for training does not require them, since it is already done for you there):
+I will list the installations, using the python installer (using Google Collab for training does not require most of them, since it is already done for you there):
 
-Pygubu: https://pypi.org/project/pygubu/
+# Required Installations for using the Jupyter Notebooks
 
-        pip install pygubu              
+Tensorflow
 
-        pip install pygubu-designer
+        pip install tensorflow 
+
+Numpy 
+
+        pip install numpy 
+
+OpenCV 
+
+        pip install opencv-python 
+
+Matplotlib
+
+        pip install matplotlib
+
+Pandas 
+
+        pip install pandas
+
+Sklearn
+
+        pip install sklearn 
+
+Seaborn
+
+        pip install seaborn
+
+Keras-Application
+
+        pip install keras_applications
+
+VGG Face9
+
+        pip install keras-vggface
+
+# Required Installations for using the user interface
+
+Tensorflow
+
+        pip install tensorflow 
+
+Numpy
+
+        pip install numpy 
+
+OpenCV
+
+        pip install opencv-python
+
+Matplotlib
+
+        pip install matplotlib
+
+Tkinter
+
+        pip install tkinter
+
+Pygubu
+
+        pip install pygubu
         
-OpenCV: https://pypi.org/project/opencv-python/
-
-        pip install opencv-python       
-
-Tensorflow: https://www.tensorflow.org/
-
-        pip install tensorflow     
-
 # Setup
 The protoype was created using PyCharm running on Windows 10.
 
