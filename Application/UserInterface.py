@@ -160,7 +160,7 @@ class GUI:
                     self.latestCamStat,
                     align='center',
                     alpha=0.5,
-                    color=['red', 'green', 'cyan', 'magenta', 'blue', 'yellow'])
+                    color=['red', 'green', 'cyan', 'magenta', 'blue', 'yellow', 'black'])
             plt.xlabel("Emotion")
             plt.ylabel("Rel. Freq [%]")
             plt.title("Latest Detected Emotions")
