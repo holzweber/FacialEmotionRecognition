@@ -1,4 +1,4 @@
-# Facial Expression Recognition (FER)
+# Facial Emotion Recognition (FER)
 This is a Python based Prototype of a Facial Expression Recognition Tool. Using Tensorflow, Keras and OpenCV as Basic Frameworks for ML/DL and Visualisation.
 
 # Motivation
