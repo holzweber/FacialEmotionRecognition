@@ -164,7 +164,7 @@ class GUI:
             plt.xlabel("Emotion")
             plt.ylabel("Rel. Freq [%]")
             plt.title("Latest Detected Emotions")
-            storedir = "./Statistics/LatestFace" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
+            storedir = "./Statistics/Statistic" + datetime.now().strftime("%m%d%Y-%H%M%S") + ".jpg"
             plt.savefig(storedir, dpi=70)
             plt.close() # close plt to avoid overlayers
             # Show image
