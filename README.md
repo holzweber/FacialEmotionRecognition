@@ -16,29 +16,31 @@ Using good documentation you can use this prototype as basis for your own FER to
 In the directory Resources/Models you can find the best trained models. In the directory ML you can find the jupyter notebooks for training the models on your own.
 
 
-model_vggface_fer2013_p224_dim3:
+model_vggface_transfer_fer2013_p224_dim3:
 
 ![model_vggface_fer2013_p224_dim3](https://user-images.githubusercontent.com/48522299/111029773-bebe3380-83fe-11eb-86a7-b4941eb3291c.png)
 
 
-model_vgg_fer2013_p48_dim1:
+model_vgg-b_fer2013_p48_dim1:
 
-![model_vgg_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029121-30947e00-83fb-11eb-8528-8695205eba73.png)
+![confusion_model_vgg](https://user-images.githubusercontent.com/48522299/112028192-36473d80-8b38-11eb-9202-14eac5e64285.png)
 
-model2020_FERG256_100px:
 
-![model2020_FERG256_100px](https://user-images.githubusercontent.com/48522299/111029553-88cc7f80-83fd-11eb-8546-ca5002f7038c.png)
+model_ferg256_p100_dim3:
+
+![confusion_model2020_ferg](https://user-images.githubusercontent.com/48522299/112028274-4a8b3a80-8b38-11eb-9bd5-bef983f90e51.png)
+
 
 Attention: Even tough the FERG data performs optimal on its training data - for real human faces it performs pretty bad!
 
 Thats why the FERG256 model was used on the entire fer2013 dataset (seen as testing data with normalization):
 
-![model2020_FERG256_100px_ON_FER2013](https://user-images.githubusercontent.com/48522299/111029685-46f00900-83fe-11eb-9536-c475f00376f7.png)
+![confusion_model2020_ferg_onfer2020data](https://user-images.githubusercontent.com/48522299/112028289-4e1ec180-8b38-11eb-9a33-f46a3ac2ec56.png)
 
 
 model2020_fer2013_p48_dim1:
 
-![model2020_fer2013_p48_dim1](https://user-images.githubusercontent.com/48522299/111029136-4144f400-83fb-11eb-84f5-81c916e0cabe.png)
+![confusion_model2020](https://user-images.githubusercontent.com/48522299/112028341-5971ed00-8b38-11eb-8eae-37d627aa92c5.png)
 
 
 # Links to used Frameworks 
